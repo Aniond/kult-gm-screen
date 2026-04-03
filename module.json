@@ -13,9 +13,9 @@
       "url": ""
     }
   ],
-  "url": "https://github.com/YOUR_USERNAME/kult-gm-screen",
-  "manifest": "https://raw.githubusercontent.com/YOUR_USERNAME/kult-gm-screen/main/module.json",
-  "download": "https://github.com/YOUR_USERNAME/kult-gm-screen/archive/refs/heads/main.zip",
+  "url": "https://github.com/Aniond/kult-gm-screen",
+  "manifest": "https://raw.githubusercontent.com/Aniond/kult-gm-screen/main/module.json",
+  "download": "https://github.com/Aniond/kult-gm-screen/archive/refs/heads/main.zip",
   "license": "MIT",
   "readme": "README.md",
   "changelog": "CHANGELOG.md",

@@ -55,13 +55,13 @@ Works both inside the GM Screen panel **and** in Foundry's main chat as `/kult [
 2. Click **Install Module**
 3. Paste the manifest URL:
    ```
-   https://raw.githubusercontent.com/YOUR_USERNAME/kult-gm-screen/main/module.json
+   https://raw.githubusercontent.com/Aniond/kult-gm-screen/main/module.json
    ```
 4. Click **Install**, then enable the module in your World
 
 ### Method 2 — Manual
 
-1. Download the [latest release ZIP](https://github.com/YOUR_USERNAME/kult-gm-screen/releases)
+1. Download the [latest release ZIP](https://github.com/Aniond/kult-gm-screen/releases)
 2. Extract to `{your Foundry data folder}/Data/modules/kult-gm-screen/`
 3. Restart Foundry and enable the module in your World
 
