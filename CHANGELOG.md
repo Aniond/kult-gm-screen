@@ -4,6 +4,12 @@ All notable changes to the Kult: Divinity Lost GM Screen module will be document
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.1] — Foundry v13 Compatibility
+
+### Changed
+- Verified compatibility with Foundry VTT v13 (build 351)
+- Updated maximum supported version to 13
+
 ## [1.0.0] — Initial Release
 
 ### Added
