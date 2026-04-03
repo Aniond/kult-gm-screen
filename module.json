@@ -1,0 +1,43 @@
+{
+  "id": "kult-gm-screen",
+  "title": "Kult: Divinity Lost — GM Screen",
+  "description": "A comprehensive Gamemaster's Screen reference for Kult: Divinity Lost. Includes all GM Moves, Rules, Harm tables, Unique Moves, NPC Builder, Horror Contract, and an in-module GM chat command system.",
+  "version": "1.0.0",
+  "compatibility": {
+    "minimum": "11",
+    "verified": "12"
+  },
+  "authors": [
+    {
+      "name": "Community",
+      "url": ""
+    }
+  ],
+  "url": "https://github.com/YOUR_USERNAME/kult-gm-screen",
+  "manifest": "https://raw.githubusercontent.com/YOUR_USERNAME/kult-gm-screen/main/module.json",
+  "download": "https://github.com/YOUR_USERNAME/kult-gm-screen/archive/refs/heads/main.zip",
+  "license": "MIT",
+  "readme": "README.md",
+  "changelog": "CHANGELOG.md",
+  "flags": {},
+  "esmodules": [
+    "scripts/main.mjs"
+  ],
+  "styles": [
+    "styles/kult-gm-screen.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "socket": false,
+  "media": [
+    {
+      "type": "cover",
+      "url": "assets/cover.webp"
+    }
+  ]
+}

@@ -1,0 +1,611 @@
+/* kult-gm-screen/styles/kult-gm-screen.css */
+
+/* =========================================================
+   KULT: DIVINITY LOST — GM SCREEN MODULE STYLES
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+/* Root variables */
+#kult-gm-screen {
+  --kult-bg:       #0d0a0e;
+  --kult-surface:  #151013;
+  --kult-card:     #1a141c;
+  --kult-border:   #3a2040;
+  --kult-accent:   #8b2fc9;
+  --kult-accent2:  #c9462f;
+  --kult-gold:     #c8a44a;
+  --kult-text:     #d4c8da;
+  --kult-muted:    #7a6882;
+  --kult-header:   #e8ddf0;
+  --kult-red:      #c9462f;
+  --kult-green:    #5fc95f;
+
+  /* dot colors per move category */
+  --dot-regular:    #c8a44a;
+  --dot-elysium:    #4a9aba;
+  --dot-madness:    #c94a8b;
+  --dot-passion:    #c9462f;
+  --dot-dream:      #6a4ac9;
+  --dot-underworld: #3a9a6a;
+  --dot-metropolis: #8a7a4a;
+  --dot-inferno:    #c9692f;
+  --dot-gaia:       #5a9a3a;
+}
+
+/* Window overrides */
+#kult-gm-screen .window-content {
+  background: var(--kult-bg);
+  color: var(--kult-text);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 15px;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- App inner layout ---- */
+.kult-app-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ---- Header ---- */
+.kult-header {
+  background: var(--kult-surface);
+  border-bottom: 1px solid var(--kult-border);
+  padding: 10px 14px 0;
+  flex-shrink: 0;
+}
+
+.kult-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.kult-title {
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--kult-gold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kult-subtitle {
+  font-size: 11px;
+  color: var(--kult-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.kult-cmd-btn {
+  background: var(--kult-accent);
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.kult-cmd-btn:hover { background: #a040e0; }
+
+.kult-search-row {
+  margin-bottom: 8px;
+}
+#kult-search {
+  width: 100%;
+  background: var(--kult-card);
+  border: 1px solid var(--kult-border);
+  border-radius: 4px;
+  padding: 5px 10px;
+  color: var(--kult-text);
+  font-family: 'Crimson Pro', serif;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+#kult-search::placeholder { color: var(--kult-muted); font-style: italic; }
+#kult-search:focus { border-color: var(--kult-accent); }
+
+/* ---- Tabs ---- */
+.kult-tabs {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  gap: 0;
+}
+.kult-tabs::-webkit-scrollbar { display: none; }
+
+.kult-tab {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  border: none;
+  background: transparent;
+  color: var(--kult-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.kult-tab:hover { color: var(--kult-text); }
+.kult-tab.active {
+  color: var(--kult-gold);
+  border-bottom: 2px solid var(--kult-gold);
+  background: rgba(200,164,74,0.05);
+}
+
+/* ---- Body ---- */
+.kult-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--kult-border) transparent;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ---- Section titles ---- */
+.kult-section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--kult-accent);
+  border-bottom: 1px solid var(--kult-border);
+  padding-bottom: 5px;
+  margin: 14px 0 8px;
+}
+.kult-section-title:first-child { margin-top: 0; }
+
+/* ---- Move chips ---- */
+.moves-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 5px;
+  margin-bottom: 6px;
+}
+
+.move-chip {
+  background: var(--kult-card);
+  border: 1px solid var(--kult-border);
+  border-radius: 4px;
+  padding: 6px 9px;
+  font-size: 13px;
+  color: var(--kult-text);
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  transition: border-color 0.12s, background 0.12s;
+  line-height: 1.35;
+}
+.move-chip:hover {
+  border-color: var(--kult-accent);
+  background: rgba(139,47,201,0.1);
+  color: var(--kult-header);
+}
+
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.dot-regular    { background: var(--dot-regular); }
+.dot-elysium    { background: var(--dot-elysium); }
+.dot-madness    { background: var(--dot-madness); }
+.dot-passion    { background: var(--dot-passion); }
+.dot-dream      { background: var(--dot-dream); }
+.dot-underworld { background: var(--dot-underworld); }
+.dot-metropolis { background: var(--dot-metropolis); }
+.dot-inferno    { background: var(--dot-inferno); }
+.dot-gaia       { background: var(--dot-gaia); }
+
+/* ---- Rule cards ---- */
+.kult-rule-card {
+  background: var(--kult-card);
+  border: 1px solid var(--kult-border);
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.kult-rule-title {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--kult-gold);
+  margin-bottom: 8px;
+  letter-spacing: 0.03em;
+}
+.kult-rule-card p {
+  margin-bottom: 6px;
+  line-height: 1.5;
+  font-size: 14px;
+}
+.kult-rule-card p strong { color: var(--kult-gold); }
+
+/* Roll result rows */
+.roll-result {
+  display: flex;
+  gap: 7px;
+  margin-bottom: 5px;
+  font-size: 14px;
+  line-height: 1.4;
+  align-items: flex-start;
+}
+.roll-badge {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.rb-15   { background: #1a3a1a; color: #5fc95f; border: 1px solid #2a5a2a; }
+.rb-10   { background: #3a2a10; color: var(--kult-gold); border: 1px solid #5a4a20; }
+.rb-fail { background: #3a1010; color: #c95f5f; border: 1px solid #5a2020; }
+
+/* ---- Stability table ---- */
+.kult-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.kult-table th {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--kult-muted);
+  text-align: left;
+  padding: 3px 8px 5px;
+  border-bottom: 1px solid var(--kult-border);
+}
+.kult-table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(58,32,64,0.3);
+  vertical-align: top;
+}
+.stab-safe td:first-child     { color: var(--kult-green); }
+.stab-moderate td:first-child  { color: var(--kult-gold); }
+.stab-serious td:first-child   { color: #e09040; }
+.stab-critical td:first-child  { color: var(--kult-red); }
+.stab-broken td:first-child    { color: #c95f5f; font-weight: bold; }
+.harm-val { color: var(--kult-red); font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600; }
+
+/* ---- Unique moves filter ---- */
+.kult-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.um-filter-btn {
+  background: rgba(139,47,201,0.1);
+  border: 1px solid var(--kult-border);
+  border-radius: 3px;
+  color: var(--kult-muted);
+  font-size: 12px;
+  font-family: monospace;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.um-filter-btn:hover, .um-filter-btn.active {
+  border-color: var(--kult-gold);
+  color: var(--kult-gold);
+  background: rgba(200,164,74,0.08);
+}
+
+.kult-um-tier { margin-bottom: 12px; }
+.kult-tier-label {
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.kult-tier-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--kult-border);
+}
+.tier-badge {
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 3px;
+  background: rgba(58,32,64,0.5);
+  color: var(--kult-accent);
+  border: 1px solid var(--kult-border);
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* ---- NPC Builder ---- */
+.kult-npc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.tag-item {
+  background: var(--kult-card);
+  border: 1px solid var(--kult-border);
+  border-radius: 3px;
+  padding: 2px 7px;
+  font-size: 12px;
+  color: var(--kult-muted);
+  cursor: pointer;
+  transition: all 0.1s;
+  user-select: none;
+}
+.tag-item:hover {
+  background: rgba(139,47,201,0.15);
+  border-color: var(--kult-accent);
+  color: var(--kult-text);
+}
+.tag-item.selected {
+  background: rgba(139,47,201,0.25);
+  border-color: var(--kult-accent);
+  color: var(--kult-header);
+}
+.kult-npc-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.kult-npc-result {
+  background: var(--kult-card);
+  border: 1px solid var(--kult-accent);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+.kult-npc-result-title {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  color: var(--kult-gold);
+  margin-bottom: 8px;
+}
+.kult-npc-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+.kult-npc-label { color: var(--kult-muted); min-width: 55px; }
+
+/* ---- Horror Contract ---- */
+.kult-horror-item {
+  background: var(--kult-card);
+  border-left: 3px solid var(--kult-red);
+  border-radius: 0 4px 4px 0;
+  padding: 8px 12px;
+  margin-bottom: 7px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.kult-horror-item strong {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  color: var(--kult-gold);
+  display: block;
+  margin-bottom: 2px;
+  letter-spacing: 0.03em;
+}
+
+/* ---- Experience ---- */
+.kult-xp-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(58,32,64,0.4);
+  font-size: 14px;
+  cursor: pointer;
+}
+.kult-xp-check {
+  width: 18px; height: 18px;
+  border: 1px solid var(--kult-border);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.12s;
+}
+.kult-xp-check.checked {
+  background: var(--kult-accent);
+  border-color: var(--kult-accent);
+}
+.kult-xp-check.checked::after { content: '✓'; color: #fff; font-size: 12px; }
+.kult-xp-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+.kult-xp-label {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  color: var(--kult-muted);
+  letter-spacing: 0.06em;
+}
+#xp-count { color: var(--kult-gold); }
+
+/* ---- GM Chat ---- */
+.kult-quick-cmds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+.quick-cmd {
+  background: rgba(139,47,201,0.1);
+  border: 1px solid var(--kult-border);
+  border-radius: 3px;
+  color: var(--kult-muted);
+  font-size: 12px;
+  font-family: monospace;
+  padding: 3px 9px;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.quick-cmd:hover {
+  border-color: var(--kult-accent);
+  color: var(--kult-text);
+  background: rgba(139,47,201,0.2);
+}
+
+.kult-chat-output {
+  background: var(--kult-card);
+  border: 1px solid var(--kult-border);
+  border-radius: 5px;
+  padding: 10px 12px;
+  min-height: 140px;
+  max-height: 280px;
+  overflow-y: auto;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.55;
+  scrollbar-width: thin;
+  scrollbar-color: var(--kult-border) transparent;
+}
+.kult-chat-msg { margin-bottom: 8px; }
+.kult-chat-label {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--kult-accent);
+  margin-bottom: 1px;
+}
+.kult-chat-label.gm { color: var(--kult-gold); }
+.kult-chat-label.user { color: var(--kult-muted); }
+.kult-chat-system { color: var(--kult-muted); font-style: italic; }
+.kult-gold { color: var(--kult-gold); }
+.kult-red  { color: var(--kult-red); }
+
+.kult-chat-input-row {
+  display: flex;
+  gap: 6px;
+}
+#chat-input {
+  flex: 1;
+  background: var(--kult-card);
+  border: 1px solid var(--kult-border);
+  border-radius: 4px;
+  padding: 7px 10px;
+  color: var(--kult-text);
+  font-family: 'Crimson Pro', serif;
+  font-size: 14px;
+  outline: none;
+  min-width: 0;
+}
+#chat-input:focus { border-color: var(--kult-accent); }
+
+/* ---- Buttons ---- */
+.kult-btn {
+  background: rgba(139,47,201,0.18);
+  border: 1px solid var(--kult-accent);
+  border-radius: 4px;
+  color: var(--kult-text);
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.kult-btn:hover { background: rgba(139,47,201,0.35); }
+.kult-btn-muted {
+  background: rgba(58,32,64,0.3);
+  border-color: var(--kult-border);
+  color: var(--kult-muted);
+}
+.kult-btn-muted:hover { background: rgba(58,32,64,0.55); color: var(--kult-text); }
+.kult-btn-send {
+  background: var(--kult-accent2);
+  border-color: var(--kult-accent2);
+  color: #fff;
+}
+.kult-btn-send:hover { background: #e05030; }
+.kult-btn-small {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  background: rgba(139,47,201,0.2);
+  border: 1px solid var(--kult-accent);
+  border-radius: 3px;
+  color: var(--kult-muted);
+  padding: 3px 10px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.12s;
+}
+.kult-btn-small:hover { background: rgba(139,47,201,0.4); color: var(--kult-text); }
+
+/* ---- Utility ---- */
+.kult-muted { color: var(--kult-muted); }
+.kult-hint  { font-size: 13px; font-style: italic; margin-bottom: 12px; }
+
+/* ---- Foundry chat result styling ---- */
+.kult-chat-result {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 4px 0;
+}
+.kult-chat-move {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  border-left: 3px solid #c9462f;
+  padding-left: 8px;
+}
+.kult-chat-npc h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  color: #c8a44a;
+  margin-bottom: 6px;
+}
+
+/* ---- Sidebar button ---- */
+.kult-sidebar-btn {
+  width: 100%;
+  background: rgba(139,47,201,0.2);
+  border: 1px solid #3a2040;
+  border-radius: 4px;
+  color: #c8a44a;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  padding: 6px;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background 0.15s;
+  letter-spacing: 0.04em;
+}
+.kult-sidebar-btn:hover { background: rgba(139,47,201,0.4); }
+
+/* ---- Responsive ---- */
+@media (max-width: 520px) {
+  .kult-npc-grid { grid-template-columns: 1fr; }
+  .moves-grid { grid-template-columns: 1fr; }
+}

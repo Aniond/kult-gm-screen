@@ -1,0 +1,23 @@
+{
+  "KULTGMSCREEN": {
+    "Title": "Kult: Divinity Lost — GM Screen",
+    "Settings": {
+      "DefaultTab": "Default Tab",
+      "DefaultTabHint": "The tab shown when the GM Screen is first opened.",
+      "Position": "Screen Position",
+      "PositionHint": "Where the GM Screen appears on screen.",
+      "RememberTab": "Remember Last Tab",
+      "RememberTabHint": "Re-open the GM Screen on whichever tab you last used."
+    },
+    "Tabs": {
+      "Moves": "GM Moves",
+      "Rules": "Rules",
+      "Harm": "Harm",
+      "Unique": "Unique Moves",
+      "NPC": "NPC Builder",
+      "Horror": "Horror Contract",
+      "XP": "Experience",
+      "Chat": "GM Chat"
+    }
+  }
+}
