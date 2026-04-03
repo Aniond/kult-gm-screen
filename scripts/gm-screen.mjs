@@ -1,5 +1,4 @@
 // kult-gm-screen/scripts/gm-screen.mjs
-// Main Application window for the Kult GM Screen
 
 import {
   MOVES, UNIQUE_MOVES, NPC_DATA, HORROR_CONTRACT,
@@ -24,7 +23,7 @@ export class KultGMScreen extends Application {
   static get defaultOptions() {
     const pos = game.settings.get(MODULE_ID, "screenPosition") ?? "right";
     const leftPos = pos === "left" ? 10 : pos === "center" ? window.innerWidth / 2 - 380 : window.innerWidth - 780;
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       id: "kult-gm-screen",
       title: "Kult: Divinity Lost — GM Screen",
       template: "modules/kult-gm-screen/templates/gm-screen.hbs",
@@ -38,31 +37,23 @@ export class KultGMScreen extends Application {
   }
 
   getData() {
-    return {
-      moves: MOVES,
-      uniqueMoves: UNIQUE_MOVES,
-      npcData: NPC_DATA,
-      horrorContract: HORROR_CONTRACT,
-      harmData: HARM_DATA,
-      stability: STABILITY,
-      experienceQuestions: EXPERIENCE_QUESTIONS,
-      currentTab: this._currentTab,
-      uniqueFilter: this._uniqueFilter,
-      npcSelections: this._npcSelections,
-      xpChecked: this._xpChecked,
-      chatLog: this._chatLog,
-      moveCategories: Object.keys(MOVES),
-      uniqueCategories: Object.keys(UNIQUE_MOVES)
-    };
+    return {};
   }
 
   activateListeners(html) {
     super.activateListeners(html);
 
+    // Populate all dynamic content via JS
+    this._buildMoves(html);
+    this._buildUniqueMoves(html);
+    this._buildNPCTags(html);
+    this._buildHorror(html);
+    this._buildXP(html);
+
     // Tab switching
     html.find(".kult-tab").on("click", (e) => {
       const tab = e.currentTarget.dataset.tab;
-      this._switchTab(tab, html);
+      if (tab) this._switchTab(tab, html);
     });
 
     // Search
@@ -70,21 +61,23 @@ export class KultGMScreen extends Application {
       this._handleSearch(e.currentTarget.value, html);
     });
 
-    // Move chips — click to output to chat
-    html.find(".move-chip").on("click", (e) => {
+    // Move chips — delegated click to whisper to chat
+    html.on("click", ".move-chip", (e) => {
       const move = e.currentTarget.dataset.move;
-      this._sendMoveToChat(move);
+      if (move) this._sendMoveToChat(move);
     });
 
     // Unique move filter buttons
     html.find(".um-filter-btn").on("click", (e) => {
       const cat = e.currentTarget.dataset.cat;
       this._uniqueFilter = cat;
-      this.render();
+      html.find(".um-filter-btn").removeClass("active");
+      e.currentTarget.classList.add("active");
+      this._buildUniqueMoves(html);
     });
 
-    // NPC tag toggling
-    html.find(".tag-item").on("click", (e) => {
+    // NPC tag toggling — delegated
+    html.on("click", ".tag-item", (e) => {
       const el = e.currentTarget;
       const category = el.dataset.category;
       const value = el.dataset.value;
@@ -95,8 +88,8 @@ export class KultGMScreen extends Application {
     html.find("#npc-generate").on("click", () => this._generateRandomNPC(html));
     html.find("#npc-clear").on("click", () => this._clearNPC(html));
 
-    // Experience checkboxes
-    html.find(".xp-item").on("click", (e) => {
+    // Experience checkboxes — delegated
+    html.on("click", ".kult-xp-item", (e) => {
       const idx = parseInt(e.currentTarget.dataset.index);
       this._toggleXP(idx, html);
     });
@@ -107,7 +100,7 @@ export class KultGMScreen extends Application {
     html.find("#chat-input").on("keydown", (e) => {
       if (e.key === "Enter") this._sendChatCmd(html);
     });
-    html.find(".quick-cmd").on("click", (e) => {
+    html.on("click", ".quick-cmd", (e) => {
       const cmd = e.currentTarget.dataset.cmd;
       html.find("#chat-input").val(cmd);
       this._sendChatCmd(html);
@@ -117,23 +110,99 @@ export class KultGMScreen extends Application {
       html.find("#chat-output").html('<p class="kult-chat-system">Chat cleared.</p>');
     });
 
-    // Open GM Screen button from chat
-    html.find("#open-chat-btn").on("click", () => this._switchTab("chat", html));
-
-    // Restore tab state
+    // Restore state
     this._switchTab(this._currentTab, html, false);
-    this._renderXPState(html);
-    this._renderNPCState(html);
     this._renderChatLog(html);
   }
+
+  // ---- Build dynamic content ----
+
+  _buildMoves(html) {
+    const dotColors = {
+      regular: "#c8a44a", elysium: "#4a9aba", madness: "#c94a8b",
+      passion: "#c9462f", dream: "#6a4ac9", underworld: "#3a9a6a",
+      metropolis: "#8a7a4a", inferno: "#c9692f", gaia: "#5a9a3a"
+    };
+    for (const [category, moves] of Object.entries(MOVES)) {
+      const grid = html.find(`#grid-${category}`)[0];
+      if (!grid) continue;
+      grid.innerHTML = moves.map(move =>
+        `<div class="move-chip" data-move="${move}">
+          <span class="dot" style="background:${dotColors[category]}"></span>
+          <span>${move}</span>
+        </div>`
+      ).join("");
+    }
+  }
+
+  _buildUniqueMoves(html) {
+    const container = html.find("#unique-moves-container")[0];
+    if (!container) return;
+    const tierColors = {
+      "1: Weak": "#5a6a7a", "2: Novice": "#4a7a6a",
+      "3: Considerable": "#7a6a3a", "4: Powerful": "#7a3a5a", "5: Exceptional": "#6a3a8a"
+    };
+    const cats = this._uniqueFilter === "all" ? Object.keys(UNIQUE_MOVES) : [this._uniqueFilter];
+    container.innerHTML = cats.map(cat => `
+      <div class="kult-section-title">${cat.charAt(0).toUpperCase() + cat.slice(1)} Moves</div>
+      ${Object.entries(UNIQUE_MOVES[cat]).map(([tier, moves]) => `
+        <div class="kult-um-tier">
+          <div class="kult-tier-label"><span class="tier-badge">${tier}</span></div>
+          <div class="moves-grid">
+            ${moves.map(move =>
+              `<div class="move-chip" data-move="${move}">
+                <span class="dot" style="background:${tierColors[tier]}"></span>
+                <span>${move}</span>
+              </div>`
+            ).join("")}
+          </div>
+        </div>`
+      ).join("")}`
+    ).join("");
+  }
+
+  _buildNPCTags(html) {
+    for (const [category, items] of Object.entries(NPC_DATA)) {
+      const cloud = html.find(`#npc-${category}`)[0];
+      if (!cloud) continue;
+      cloud.innerHTML = items.map(item =>
+        `<span class="tag-item ${this._npcSelections[category].includes(item) ? "selected" : ""}"
+              data-category="${category}" data-value="${item}">${item}</span>`
+      ).join("");
+    }
+  }
+
+  _buildHorror(html) {
+    const container = html.find("#horror-container")[0];
+    if (!container) return;
+    container.innerHTML = HORROR_CONTRACT.map(item =>
+      `<div class="kult-horror-item">
+        <strong>${item.title}</strong>
+        <span>${item.desc}</span>
+      </div>`
+    ).join("");
+  }
+
+  _buildXP(html) {
+    const list = html.find("#xp-list")[0];
+    if (!list) return;
+    list.innerHTML = EXPERIENCE_QUESTIONS.map((q, i) =>
+      `<div class="kult-xp-item" data-index="${i}">
+        <div class="kult-xp-check ${this._xpChecked[i] ? "checked" : ""}" id="xp-check-${i}"></div>
+        <span>${q}</span>
+      </div>`
+    ).join("");
+  }
+
+  // ---- Tab / UI state ----
 
   _switchTab(tabId, html, save = true) {
     this._currentTab = tabId;
     if (save && game.settings.get(MODULE_ID, "rememberTab")) {
       game.settings.set(MODULE_ID, "lastTab", tabId);
     }
-    html.find(".tab-panel").removeClass("active").hide();
-    html.find(`#panel-${tabId}`).addClass("active").show();
+    html.find(".tab-panel").hide();
+    html.find(`#panel-${tabId}`).show();
     html.find(".kult-tab").removeClass("active");
     html.find(`.kult-tab[data-tab="${tabId}"]`).addClass("active");
   }
@@ -148,7 +217,6 @@ export class KultGMScreen extends Application {
       const text = (el.dataset.move || el.textContent).toLowerCase();
       $(el).toggle(text.includes(q));
     });
-    // Switch to moves tab for search
     if (q.length > 1) this._switchTab("moves", html);
   }
 
@@ -156,7 +224,6 @@ export class KultGMScreen extends Application {
     ChatMessage.create({
       speaker: { alias: "GM (Kult Screen)" },
       content: `<div class="kult-chat-move"><strong>GM Move:</strong> ${moveName}</div>`,
-      type: CONST.CHAT_MESSAGE_TYPES.OTHER,
       whisper: game.users.filter(u => u.isGM).map(u => u.id)
     });
   }
@@ -201,9 +268,9 @@ export class KultGMScreen extends Application {
         out += `<div class="kult-npc-row"><span class="kult-npc-label">${label}:</span><span>${this._npcSelections[key].join(", ")}</span></div>`;
       }
     }
-    out += `<button class="kult-btn-small" id="npc-send-chat">Send to Chat</button></div>`;
+    out += `<button class="kult-btn-small kult-npc-send">Send to Chat</button></div>`;
     result.html(out);
-    result.find("#npc-send-chat").on("click", () => this._sendNPCToChat());
+    result.find(".kult-npc-send").on("click", () => this._sendNPCToChat());
   }
 
   _sendNPCToChat() {
@@ -218,28 +285,20 @@ export class KultGMScreen extends Application {
     ChatMessage.create({
       speaker: { alias: "GM (Kult Screen)" },
       content,
-      type: CONST.CHAT_MESSAGE_TYPES.OTHER,
       whisper: game.users.filter(u => u.isGM).map(u => u.id)
     });
   }
 
   _toggleXP(index, html) {
     this._xpChecked[index] = !this._xpChecked[index];
-    this._renderXPState(html);
+    html.find(`#xp-check-${index}`).toggleClass("checked", this._xpChecked[index]);
+    html.find("#xp-count").text(this._xpChecked.filter(Boolean).length);
   }
 
   _resetXP(html) {
     this._xpChecked = [false, false, false];
-    this._renderXPState(html);
-  }
-
-  _renderXPState(html) {
-    this._xpChecked.forEach((checked, i) => {
-      const check = html.find(`#xp-check-${i}`);
-      check.toggleClass("checked", checked);
-    });
-    const total = this._xpChecked.filter(Boolean).length;
-    html.find("#xp-count").text(total);
+    html.find(".kult-xp-check").removeClass("checked");
+    html.find("#xp-count").text("0");
   }
 
   _sendChatCmd(html) {
@@ -265,10 +324,12 @@ export class KultGMScreen extends Application {
         <div class="kult-chat-body">${entry.msg}</div>
       </div>`
     ).join(""));
-    output[0].scrollTop = output[0].scrollHeight;
+    const el = output[0];
+    if (el) el.scrollTop = el.scrollHeight;
   }
 
-  // Static command processor (also used by chat hooks)
+  // ---- Static helpers ----
+
   static processCommand(cmd) {
     const c = cmd.toLowerCase().trim();
 
@@ -306,17 +367,15 @@ export class KultGMScreen extends Application {
 
     if (c.startsWith("/stability")) {
       return {
-        html: `Stability track: Composed → Uneasy → Unfocused → Shaken → Distressed → Neurotic → Anxious → Irrational → Unhinged → <strong class="kult-red">Broken</strong> (GM makes a Move)`,
+        html: `Stability: Composed → Uneasy → Unfocused → Shaken → Distressed → Neurotic → Anxious → Irrational → Unhinged → <strong class="kult-red">Broken</strong> (GM makes a Move)`,
         cls: "gm"
       };
     }
 
     if (c.startsWith("/npc")) {
       const pick = arr => arr[Math.floor(Math.random() * arr.length)];
-      const body = pick(NPC_DATA.body);
-      const face = pick(NPC_DATA.face);
-      const eyes = pick(NPC_DATA.eyes);
-      const clothes = pick(NPC_DATA.clothes);
+      const body = pick(NPC_DATA.body), face = pick(NPC_DATA.face);
+      const eyes = pick(NPC_DATA.eyes), clothes = pick(NPC_DATA.clothes);
       const drive = pick(NPC_DATA.drive);
       return {
         html: `<strong class="kult-gold">Random NPC</strong><br>Body: ${body} | Face: ${face} | Eyes: ${eyes}<br>Clothes: ${clothes} | Drive: ${drive}`,
@@ -344,7 +403,6 @@ export class KultGMScreen extends Application {
       };
     }
 
-    // Fuzzy move search
     const allMoves = Object.values(MOVES).flat();
     const found = allMoves.find(m => m.toLowerCase().includes(c.replace("/", "")));
     if (found) return { html: `Move found: <em class="kult-gold">${found}</em>`, cls: "gm" };
@@ -359,17 +417,10 @@ export class KultGMScreen extends Application {
   }
 
   static addToolbarButton() {
-    Hooks.on("renderSceneControls", (app, html) => {
-      // Add a sidebar button via the Players section or use a macro-bar approach
-    });
-
-    // Simpler: add a button to the sidebar
     Hooks.on("renderSidebarTab", (app, html) => {
       if (app.tabName !== "chat") return;
       if (html.find("#kult-screen-btn").length) return;
-      const btn = $(`<button id="kult-screen-btn" class="kult-sidebar-btn" title="Open GM Screen">
-        ◈ Kult GM Screen
-      </button>`);
+      const btn = $(`<button id="kult-screen-btn" class="kult-sidebar-btn" title="Open GM Screen">◈ Kult GM Screen</button>`);
       btn.on("click", () => game.kultGMScreen.render(true));
       html.find(".directory-footer, .directory-header").first().append(btn);
     });

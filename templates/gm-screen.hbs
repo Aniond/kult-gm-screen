@@ -1,91 +1,86 @@
 {{! kult-gm-screen/templates/gm-screen.hbs }}
 <div class="kult-app-inner">
 
-  {{! Header }}
   <div class="kult-header">
     <div class="kult-title-row">
       <div>
         <div class="kult-title">◈ Kult: Divinity Lost</div>
         <div class="kult-subtitle">Gamemaster's Screen Reference</div>
       </div>
-      <button class="kult-cmd-btn" data-tab="chat">⌘ GM Command</button>
+      <button class="kult-cmd-btn kult-tab" data-tab="chat">⌘ GM Command</button>
     </div>
     <div class="kult-search-row">
       <input id="kult-search" type="text" placeholder="Search moves, rules, tables..." />
     </div>
     <div class="kult-tabs">
-      {{#each (array "moves" "rules" "harm" "unique" "npc" "horror" "xp" "chat") as |tab|}}
-      <button class="kult-tab {{#if (eq ../currentTab tab)}}active{{/if}}" data-tab="{{tab}}">
-        {{#if (eq tab "moves")}}GM Moves{{/if}}
-        {{#if (eq tab "rules")}}Rules{{/if}}
-        {{#if (eq tab "harm")}}Harm{{/if}}
-        {{#if (eq tab "unique")}}Unique Moves{{/if}}
-        {{#if (eq tab "npc")}}NPC Builder{{/if}}
-        {{#if (eq tab "horror")}}Horror Contract{{/if}}
-        {{#if (eq tab "xp")}}Experience{{/if}}
-        {{#if (eq tab "chat")}}GM Chat{{/if}}
-      </button>
-      {{/each}}
+      <button class="kult-tab" data-tab="moves">GM Moves</button>
+      <button class="kult-tab" data-tab="rules">Rules</button>
+      <button class="kult-tab" data-tab="harm">Harm</button>
+      <button class="kult-tab" data-tab="unique">Unique Moves</button>
+      <button class="kult-tab" data-tab="npc">NPC Builder</button>
+      <button class="kult-tab" data-tab="horror">Horror Contract</button>
+      <button class="kult-tab" data-tab="xp">Experience</button>
+      <button class="kult-tab" data-tab="chat">GM Chat</button>
     </div>
   </div>
 
-  {{! Body }}
   <div class="kult-body">
 
-    {{! === MOVES TAB === }}
-    <div class="tab-panel {{#if (eq currentTab 'moves')}}active{{/if}}" id="panel-moves">
-      {{#each moves as |moveList category|}}
-      <div class="kult-section-title">{{capitalize category}} Moves</div>
-      <div class="moves-grid">
-        {{#each moveList as |move|}}
-        <div class="move-chip" data-move="{{move}}" data-type="{{category}}">
-          <span class="dot dot-{{category}}"></span>
-          <span>{{move}}</span>
-        </div>
-        {{/each}}
-      </div>
-      {{/each}}
+    {{! MOVES TAB }}
+    <div class="tab-panel" id="panel-moves">
+      <div class="kult-section-title">Regular Moves</div>
+      <div class="moves-grid" id="grid-regular"></div>
+      <div class="kult-section-title">Elysium Moves</div>
+      <div class="moves-grid" id="grid-elysium"></div>
+      <div class="kult-section-title">Madness Moves</div>
+      <div class="moves-grid" id="grid-madness"></div>
+      <div class="kult-section-title">Passion Moves</div>
+      <div class="moves-grid" id="grid-passion"></div>
+      <div class="kult-section-title">Dream Moves</div>
+      <div class="moves-grid" id="grid-dream"></div>
+      <div class="kult-section-title">Underworld Moves</div>
+      <div class="moves-grid" id="grid-underworld"></div>
+      <div class="kult-section-title">Metropolis Moves</div>
+      <div class="moves-grid" id="grid-metropolis"></div>
+      <div class="kult-section-title">Inferno Moves</div>
+      <div class="moves-grid" id="grid-inferno"></div>
+      <div class="kult-section-title">Gaia Moves</div>
+      <div class="moves-grid" id="grid-gaia"></div>
     </div>
 
-    {{! === RULES TAB === }}
-    <div class="tab-panel {{#if (eq currentTab 'rules')}}active{{/if}}" id="panel-rules">
-
+    {{! RULES TAB }}
+    <div class="tab-panel" id="panel-rules">
       <div class="kult-rule-card">
         <div class="kult-rule-title">• Keep it Together — roll +Willpower</div>
         <div class="roll-result"><span class="roll-badge rb-15">15+</span><span>You grit your teeth and stay the course.</span></div>
         <div class="roll-result"><span class="roll-badge rb-10">10–14</span><span>Instills a condition (−1 in hindering situations). Choose: angry / sad / scared / guilt-ridden (−1 Stability); obsessed (+1 Relation); distracted (−2); haunted later.</span></div>
         <div class="roll-result"><span class="roll-badge rb-fail">–9</span><span>GM chooses: cower powerless, panic, emotional trauma (−2 Stability), or life-changing trauma (−4 Stability).</span></div>
       </div>
-
       <div class="kult-rule-card">
         <div class="kult-rule-title">• Avoid Harm — roll +Reflexes</div>
         <div class="roll-result"><span class="roll-badge rb-15">15+</span><span>Emerge completely unharmed.</span></div>
         <div class="roll-result"><span class="roll-badge rb-10">10–14</span><span>Avoid the worst, but GM decides: bad spot, lose something, or partially sustain Harm.</span></div>
-        <div class="roll-result"><span class="roll-badge rb-fail">–9</span><span>Too slow or bad judgment. May not avoid any Harm, or end up in a worse spot. GM makes a Move.</span></div>
+        <div class="roll-result"><span class="roll-badge rb-fail">–9</span><span>Too slow or bad judgment. May not avoid Harm, or end up in a worse spot. GM makes a Move.</span></div>
       </div>
-
       <div class="kult-rule-card">
         <div class="kult-rule-title">• Endure Injury — roll +Fortitude −Harm (add armor rating)</div>
         <div class="roll-result"><span class="roll-badge rb-15">15+</span><span>Ride out the pain and keep going.</span></div>
         <div class="roll-result"><span class="roll-badge rb-10">10–14</span><span>Still standing. GM picks: thrown off balance / lose something / Serious Wound.</span></div>
-        <div class="roll-result"><span class="roll-badge rb-fail">–9</span><span>Overwhelming. Choose: knocked out (GM may add Serious Wound) / Critical Wound but act / Die.</span></div>
+        <div class="roll-result"><span class="roll-badge rb-fail">–9</span><span>Overwhelming. Choose: knocked out / Critical Wound but act / Die.</span></div>
       </div>
-
       <div class="kult-rule-card">
         <div class="kult-rule-title">Stability Track</div>
         <table class="kult-table">
           <thead><tr><th>State</th><th>Effect</th></tr></thead>
           <tbody>
-            {{#each stability as |row|}}
-            <tr class="stab-{{row.tier}}">
-              <td>{{row.state}}</td>
-              <td>{{row.effect}}</td>
-            </tr>
-            {{/each}}
+            <tr class="stab-safe"><td>Composed</td><td>—</td></tr>
+            <tr class="stab-moderate"><td>Uneasy / Unfocused</td><td>Moderate: −1 to Disadvantage rolls</td></tr>
+            <tr class="stab-serious"><td>Shaken / Distressed / Neurotic</td><td>Serious: −1 Keep it Together, −2 Disadvantage</td></tr>
+            <tr class="stab-critical"><td>Anxious / Irrational / Unhinged</td><td>Critical: −2 Keep it Together, −3 Disadvantage, +1 See Through the Illusion</td></tr>
+            <tr class="stab-broken"><td>Broken</td><td>The GM makes a Move</td></tr>
           </tbody>
         </table>
       </div>
-
       <div class="kult-rule-card">
         <div class="kult-rule-title">Relation Moves</div>
         <p><strong>Wish No Harm:</strong> Harming a Relation requires Keep it Together. On 10–14: −Relation modifier to damage. On –9: cannot bring yourself to harm them.</p>
@@ -94,51 +89,50 @@
       </div>
     </div>
 
-    {{! === HARM TAB === }}
-    <div class="tab-panel {{#if (eq currentTab 'harm')}}active{{/if}}" id="panel-harm">
-
+    {{! HARM TAB }}
+    <div class="tab-panel" id="panel-harm">
       <div class="kult-rule-card">
         <div class="kult-rule-title">Wound Penalties (ongoing)</div>
         <table class="kult-table">
           <thead><tr><th>Condition</th><th>Deduction</th></tr></thead>
           <tbody>
-            {{#each harmData.wounds as |row|}}
-            <tr><td>{{row.condition}}</td><td class="harm-val">{{row.deduction}}</td></tr>
-            {{/each}}
+            <tr><td>Serious Wounds (non-stabilized)</td><td class="harm-val">−1</td></tr>
+            <tr><td>Critical Wounds</td><td class="harm-val">−1</td></tr>
+            <tr><td>Both Serious and Critical Wounds</td><td class="harm-val">−2</td></tr>
           </tbody>
         </table>
       </div>
-
       <div class="kult-rule-card">
         <div class="kult-rule-title">Typical Harm</div>
         <table class="kult-table">
           <thead><tr><th>Circumstance</th><th>Harm</th></tr></thead>
           <tbody>
-            {{#each harmData.typical as |row|}}
-            <tr><td>{{row.circumstance}}</td><td class="harm-val">{{row.harm}}</td></tr>
-            {{/each}}
+            <tr><td>Tumbling down stairs, tipping over on motorcycle</td><td class="harm-val">1</td></tr>
+            <tr><td>Collision at 50 km/h, thrown through window</td><td class="harm-val">2</td></tr>
+            <tr><td>Arm in lathe, drop from 3rd floor</td><td class="harm-val">3</td></tr>
+            <tr><td>Highway-speed collision, high-voltage burns</td><td class="harm-val">4</td></tr>
+            <tr><td>Hit by a weapon or other attack</td><td class="harm-val">see below</td></tr>
           </tbody>
         </table>
       </div>
-
       <div class="kult-rule-card">
         <div class="kult-rule-title">Weapon Harm</div>
         <table class="kult-table">
           <thead><tr><th>Weapon</th><th>Harm</th></tr></thead>
           <tbody>
-            {{#each harmData.weapons as |row|}}
-            <tr><td>{{row.weapon}}</td><td class="harm-val">{{row.harm}}</td></tr>
-            {{/each}}
+            <tr><td>Unarmed brawl</td><td class="harm-val">1</td></tr>
+            <tr><td>Melee / Improvised weapon</td><td class="harm-val">2</td></tr>
+            <tr><td>Light firearms</td><td class="harm-val">2</td></tr>
+            <tr><td>Heavy firearms</td><td class="harm-val">3</td></tr>
+            <tr><td>Explosives / Chainsaw</td><td class="harm-val">4</td></tr>
           </tbody>
         </table>
       </div>
-
       <div class="kult-rule-card">
         <div class="kult-rule-title">Serious Wounds</div>
         <p>Requires appropriate care and time to heal but won't worsen alone. Alcohol and painkillers can temporarily remove penalties. Max 4 — additional ones become Critical Wounds.</p>
         <p class="kult-muted"><em>Examples: lacerated arm, facial contusions, broken ribs, bone-deep cut, concussion, profuse bleeding, broken fingers, sprained ankle.</em></p>
       </div>
-
       <div class="kult-rule-card">
         <div class="kult-rule-title">Critical Wounds</div>
         <p>Will not heal on their own and will get worse if untreated. Requires urgent medical care to survive. Once stabilized and healed, treated as a stabilized Serious Wound.</p>
@@ -146,48 +140,41 @@
       </div>
     </div>
 
-    {{! === UNIQUE MOVES TAB === }}
-    <div class="tab-panel {{#if (eq currentTab 'unique')}}active{{/if}}" id="panel-unique">
+    {{! UNIQUE MOVES TAB }}
+    <div class="tab-panel" id="panel-unique">
       <div class="kult-filter-row">
-        <button class="um-filter-btn {{#if (eq uniqueFilter 'all')}}active{{/if}}" data-cat="all">All</button>
-        {{#each uniqueCategories as |cat|}}
-        <button class="um-filter-btn {{#if (eq ../uniqueFilter cat)}}active{{/if}}" data-cat="{{cat}}">{{capitalize cat}}</button>
-        {{/each}}
+        <button class="um-filter-btn active" data-cat="all">All</button>
+        <button class="um-filter-btn" data-cat="combat">Combat</button>
+        <button class="um-filter-btn" data-cat="influence">Influence</button>
+        <button class="um-filter-btn" data-cat="magic">Magic</button>
       </div>
-      {{#each uniqueMoves as |tiers cat|}}
-      {{#unless (or (eq ../uniqueFilter 'all') (eq ../uniqueFilter cat))}}{{else}}
-      <div class="kult-section-title">{{capitalize cat}} Moves</div>
-      {{#each tiers as |moves tier|}}
-      <div class="kult-um-tier">
-        <div class="kult-tier-label"><span class="tier-badge">{{tier}}</span></div>
-        <div class="moves-grid">
-          {{#each moves as |move|}}
-          <div class="move-chip" data-move="{{move}}" data-type="{{../cat}}">
-            <span class="dot dot-tier-{{../../uniqueFilter}}"></span>
-            <span>{{move}}</span>
-          </div>
-          {{/each}}
-        </div>
-      </div>
-      {{/each}}
-      {{/unless}}
-      {{/each}}
+      <div id="unique-moves-container"></div>
     </div>
 
-    {{! === NPC BUILDER TAB === }}
-    <div class="tab-panel {{#if (eq currentTab 'npc')}}active{{/if}}" id="panel-npc">
+    {{! NPC BUILDER TAB }}
+    <div class="tab-panel" id="panel-npc">
       <p class="kult-muted kult-hint">Click tags to build your NPC. Mix and match freely.</p>
       <div class="kult-npc-grid">
-        {{#each npcData as |items category|}}
         <div class="kult-npc-category">
-          <div class="kult-section-title">{{capitalize category}}</div>
-          <div class="tag-cloud">
-            {{#each items as |item|}}
-            <span class="tag-item" data-category="{{../category}}" data-value="{{item}}">{{item}}</span>
-            {{/each}}
-          </div>
+          <div class="kult-section-title">Body</div>
+          <div class="tag-cloud" id="npc-body"></div>
         </div>
-        {{/each}}
+        <div class="kult-npc-category">
+          <div class="kult-section-title">Face</div>
+          <div class="tag-cloud" id="npc-face"></div>
+        </div>
+        <div class="kult-npc-category">
+          <div class="kult-section-title">Eyes</div>
+          <div class="tag-cloud" id="npc-eyes"></div>
+        </div>
+        <div class="kult-npc-category">
+          <div class="kult-section-title">Clothes</div>
+          <div class="tag-cloud" id="npc-clothes"></div>
+        </div>
+        <div class="kult-npc-category">
+          <div class="kult-section-title">Drive</div>
+          <div class="tag-cloud" id="npc-drive"></div>
+        </div>
       </div>
       <div class="kult-npc-actions">
         <button id="npc-generate" class="kult-btn">✦ Generate Random NPC</button>
@@ -196,35 +183,25 @@
       <div id="npc-result"></div>
     </div>
 
-    {{! === HORROR CONTRACT TAB === }}
-    <div class="tab-panel {{#if (eq currentTab 'horror')}}active{{/if}}" id="panel-horror">
+    {{! HORROR CONTRACT TAB }}
+    <div class="tab-panel" id="panel-horror">
       <p class="kult-muted kult-hint">The GM's principles for creating horror at the table.</p>
-      {{#each horrorContract as |item|}}
-      <div class="kult-horror-item">
-        <strong>{{item.title}}</strong>
-        <span>{{item.desc}}</span>
-      </div>
-      {{/each}}
+      <div id="horror-container"></div>
     </div>
 
-    {{! === EXPERIENCE TAB === }}
-    <div class="tab-panel {{#if (eq currentTab 'xp')}}active{{/if}}" id="panel-xp">
+    {{! EXPERIENCE TAB }}
+    <div class="tab-panel" id="panel-xp">
       <p class="kult-muted kult-hint">Check off questions answered this session.</p>
-      {{#each experienceQuestions as |question i|}}
-      <div class="kult-xp-item" data-index="{{i}}">
-        <div class="kult-xp-check {{#if (lookup ../xpChecked i)}}checked{{/if}}" id="xp-check-{{i}}"></div>
-        <span>{{question}}</span>
-      </div>
-      {{/each}}
+      <div id="xp-list"></div>
       <div class="kult-xp-footer">
-        <span class="kult-xp-label">SESSION TOTAL: <span id="xp-count">{{countTrue xpChecked}}</span> / 3 experience</span>
+        <span class="kult-xp-label">SESSION TOTAL: <span id="xp-count">0</span> / 3 experience</span>
         <button id="xp-reset" class="kult-btn kult-btn-muted">Reset</button>
       </div>
     </div>
 
-    {{! === GM CHAT TAB === }}
-    <div class="tab-panel {{#if (eq currentTab 'chat')}}active{{/if}}" id="panel-chat">
-      <p class="kult-muted kult-hint">Type commands or use shortcuts. Also works in Foundry chat as <code>/kult [command]</code>.</p>
+    {{! GM CHAT TAB }}
+    <div class="tab-panel" id="panel-chat">
+      <p class="kult-muted kult-hint">Use shortcuts below or type commands. Also works in Foundry chat as <code>/kult [command]</code>.</p>
       <div class="kult-quick-cmds">
         <button class="quick-cmd" data-cmd="/roll 2d10">/roll 2d10</button>
         <button class="quick-cmd" data-cmd="/move">/move</button>
@@ -237,11 +214,11 @@
       </div>
       <div id="chat-output" class="kult-chat-output"></div>
       <div class="kult-chat-input-row">
-        <input id="chat-input" type="text" placeholder="Type a command or question..." />
+        <input id="chat-input" type="text" placeholder="Type a command..." />
         <button id="chat-send" class="kult-btn kult-btn-send">Send</button>
         <button id="chat-clear" class="kult-btn kult-btn-muted">Clear</button>
       </div>
     </div>
 
-  </div>{{! end .kult-body }}
-</div>{{! end .kult-app-inner }}
+  </div>
+</div>
